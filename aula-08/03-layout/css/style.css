@@ -1,0 +1,64 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+body,
+html {
+	height:100%;
+	font-family:sans-serif;
+	line-height:1.5;
+}
+
+/* Configura os textos */
+.text {
+	color: #fff;
+	font-size: 40px;
+	text-shadow: 2px 2px 0 #000;
+	position: absolute;
+	background-color: rgba(0,0,0,0.8);
+	padding: 20px;
+	line-height: 1.5;
+	width: 200px;
+	bottom: 100px;
+	left: 10%;
+}
+
+/* Configura os elementos "parallax" */
+.parallax{
+	width: 100%;
+	height: 100%;
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: 50% 0;
+	position: relative;
+}
+
+/* Configura um background para cada elemento */
+.div1 {
+	background-image: url(../imagens/11.jpg);
+}
+.div2 {
+	background-image: url(../imagens/12.jpg);
+}
+.div3 {
+	background-image: url(../imagens/13.jpg);
+}
+.div4 {
+	background-image: url(../imagens/14.jpg);
+}
+.div5 {
+	background-image: url(../imagens/15.jpg);
+}
+.div6 {
+	background-image: url(../imagens/16.jpg);
+}
+
+/* Configura o texto lorem ipsum */
+.qualquer_coisa {
+	padding: 20px;
+}
+.qualquer_coisa h2, 
+.qualquer_coisa p{
+	padding: 20px;
+	margin: 1.3 0;
+}
