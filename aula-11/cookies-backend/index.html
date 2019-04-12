@@ -1,0 +1,44 @@
+ 
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Javascript!</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  </script>
+</head>
+<body>
+   <h1>Contador</h1>
+   <button id="add">Adicionar</button>
+   <div id="counter"></div>
+</body>
+<script>
+   (function () {
+$(document).ready(function() {
+  
+  $('#add').click(function(){
+    addCount();
+  });
+  
+  
+  function getCounter() {
+    $.get( "http://localhost:3007/api/counter", function( data ) {
+      console.log('cookie: ',document.cookie)
+      console.log('datA: ',data);
+      $("#counter").text('Numero de cliques: '+data.counter)
+    }, 'json');
+  }
+  
+  function addCount() {
+    $.post( "http://localhost:3007/api/counter", function( data ) {
+      console.log('cookie: ',document.cookie)
+      console.log('datA: ',data)
+      $("#counter").text('Numero de cliques: '+data.counter)
+    }, 'json');
+  }
+  
+  getCounter();
+
+});
+})(); 
+</script>
+</html> 
