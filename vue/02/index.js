@@ -15,8 +15,8 @@
     <div    v-for="noticia in noticias">
         
         <div><span><h4>{{noticia.titulo}}</h4></div>
-        <div><span></span></div>
-        <div><span><span>{{noticia.titulo}}</span></div>
+        <div><img v-bind:src="noticia.imagem" /></div>
+        <div><span><span>{{noticia.mensagem}}</span></div>
         <hr/>
     </div>
     <div v-if="isLoged()">
@@ -24,7 +24,7 @@
         <div><span><span>Titulo: </span><input v-model="titulo" type="text" /></span></div>
         <div><span><span>Mensagem: </span><input v-model="mensagem" type="text" /></span></div>
         <div><span><span>Imagem URL: </span><input v-model="imagem" type="text" /></span></div>
-        <div><button v-on:click="sendMessage">Enviar</ button >
+        <div><button v-on:click="sendNoticia">Enviar</ button >
     </div>
 </div>
 
@@ -35,17 +35,19 @@ var app1 = new Vue({
     el: '#app-1',
     data: {
         noticias: [],
-        current_message: '',
-        name: '',
-        isDisabled: true,
+        username: '',
+        password: '',
+        titulo: '',
+        mensagem: '',
+        imagem: ''
     },
     methods: {
-        sendMessage: function ()   {
-            if(this.current_message && this.name)
-            {
-                let message = {msg: {name: this.name, msg: this.current_message}}
-                axios.post("http://104.248.235.252:3003/api/noticias", message).then((response) => this.noticias.push(response.data))
-            } 
+        sendNoticia: function ()   {
+            
+            let message = {titulo: this.titulo, 
+                mensagem: this.mensagem, imagem: this.imagem}
+                axios.post("http://104.248.235.252:3003/api/noticias", message, {headers: {Authorization: localStorage.getItem("token")}}).then((response) => this.noticias.push(response.data))
+            
             
         },
         isLoged: function () {
