@@ -1,0 +1,117 @@
+<div id="app-1">
+    
+    <span><h3>Hospitais</h3></span>
+    <div v-if="isLoged()">
+        <button v-on:click="logout">Logout</button>
+    </div>
+    <div v-if="!isLoged()">
+        <span>
+            <span>Login: </span><input v-model="username" type="text" />
+            <span>Senha: </span><input v-model="password" type="password" />
+            <button v-on:click="login">Login</button>
+        <span>
+    </div>
+    <hr/>
+    <span>
+        <span>Hospital: </span><input v-model="filtro" type="text" />
+        <button v-on:click="filtrar">Filtrar</button>
+    <span>
+    <hr/>
+    <div v-for="hospital in hospitais">
+        <div v-if="onUpdateId != hospital.id">
+            <div><span><h4>{{hospital.nome}}</h4></div>
+            <div><img v-bind:src="hospital.imagem" /></div>
+            <div><span><span>{{hospital.descricao}}</span></div>
+            <div><span><span>{{hospital.endereco}}</span></div>
+            <div v-if="hospital.autor == getUsuarioLogado() || getUsuarioLogado() == 'ceo'"><button v-on:click="() => editarHospital(hospital.id)">Editar</button>
+                <button v-on:click="() => deletarHospital(hospital.id)">Deletar</button>
+            </div>
+
+        </div>
+        <div v-if="onUpdateId == hospital.id">
+            <div><span><span>Nome: </span><input v-model="hospital.nome" type="text" /></span></div>
+            <div><span><span>Descricao: </span><input v-model="hospital.descricao" type="text" /></span></div>
+            <div><span><span>Endereco: </span><input v-model="hospital.endereco" type="text" /></span></div>
+            <div><span><span>Imagem URL: </span><input v-model="hospital.imagem" type="text" /></span></div>
+            <div><button v-on:click="() => updateHospital(hospital)">Atualizar</ button ></div>
+        </div>
+        <hr/>
+    </div>
+    <div v-if="isLoged()">
+        <h4>Novo hospital</h4>
+        <div><span><span>Nome: </span><input v-model="nome" type="text" /></span></div>
+        <div><span><span>Descricao: </span><input v-model="descricao" type="text" /></span></div>
+        <div><span><span>Endereco: </span><input v-model="endereco" type="text" /></span></div>
+        <div><span><span>Imagem URL: </span><input v-model="imagem" type="text" /></span></div>
+        <div><button v-on:click="sendHospital">Enviar</ button >
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+var app1 = new Vue({
+    el: '#app-1',
+    data: {
+        hospitais: [],
+        username: '',
+        password: '',
+        nome: '',
+        descricao: '',
+        imagem: '',
+        endereco: '',
+        filtro: '',
+        onUpdateId: -1,
+    },
+    methods: {
+        sendHospital: function ()   {
+            
+            let hospital = {nome: this.nome, 
+                descricao: this.descricao, imagem: this.imagem, endereco: this.endereco}
+                axios.post("http://104.248.235.252:3019/api/hospitais", hospital, {headers: {Authorization: localStorage.getItem("token")}}).then((response) => this.hospitais.push(response.data))
+        },
+        filtrar: function () {
+            axios.get("http://104.248.235.252:3019/api/hospitais?search="+this.filtro).then((response) => this.hospitais = response.data)
+        },
+        getUsuarioLogado: function() {
+            return localStorage.getItem("username") 
+        },
+        editarHospital: function (hospitalId) {
+            this.onUpdateId = hospitalId
+        },
+        deletarHospital: function (hospitalId) {
+            axios.delete("http://104.248.235.252:3019/api/hospitais/"+hospitalId, {headers: {Authorization: localStorage.getItem("token")}}).then((response) => {
+                let index = this.hospitais.findIndex((hospital) => hospital.id == hospitalId)
+                this.hospitais.splice(index, 1)
+            })
+        },
+        updateHospital: function (hospital)   {
+            axios.put("http://104.248.235.252:3019/api/hospitais/"+hospital.id, hospital, {headers: {Authorization: localStorage.getItem("token")}}).then((response) => console.log('response.data: ',response.data))
+            this.onUpdateId = -1;
+            
+            
+        },
+        isLoged: function () {
+            return localStorage.getItem("token")
+        },
+        login: function () {
+            axios.post("http://104.248.235.252:3019/api/login", {login: this.username, senha: this.password}).then((response) =>  { 
+                localStorage.setItem("token", response.data.token)
+                localStorage.setItem("username", this.username)
+                this.$forceUpdate();
+            })
+        },
+        logout: function () {
+            localStorage.setItem("token", '')
+            this.$forceUpdate();
+        }
+    },
+    mounted () {
+        axios.get("http://104.248.235.252:3019/api/hospitais").then((response) => this.hospitais = response.data)
+        
+    }
+})
+</script> 
+
+
+//http://104.248.235.252:3019/api/hospitais
