@@ -1,0 +1,75 @@
+<html>
+<body>
+<div id="app-1">
+    
+    <span><h3>Hospitais</h3></span>
+    <div v-if="isLoged()">
+        <button v-on:click="logout">Logout</button>
+    </div>
+    <div v-if="!isLoged()">
+        <span>
+            <span>Login: </span><input v-model="username" type="text" />
+            <span>Senha: </span><input v-model="password" type="password" />
+            <button v-on:click="login">Login</button>
+        <span>
+    </div>
+    <hr/>
+      
+    <span>
+        <span>Hospital: </span><input v-model="filtro" type="text" />
+        <button v-on:click="filtrar">Filtrar</button>
+    <span>
+    <hr/>
+    <div id="mapidall" style="height: 600px; width: 1000px"></div>
+
+    <hr/>
+    
+    <div v-for="hospital in hospitais">
+        <div v-if="onUpdateId != hospital.id">
+            <div><span><h4>{{hospital.nome}}</h4></div>
+            <div><img v-bind:src="hospital.imagem" /></div>
+            <div><span><span>{{hospital.descricao}}</span></div>
+            <div><span><span>{{hospital.endereco}}</span></div>
+            <div v-if="hospital.autor == getUsuarioLogado() || getUsuarioLogado() == 'ceo'"><button v-on:click="() => editarHospital(hospital.id)">Editar</button>
+                <button v-on:click="() => deletarHospital(hospital.id)">Deletar</button>
+            </div>
+
+        </div>
+        <div v-show="onUpdateId == hospital.id">
+            <div><span><span>Nome: </span><input v-model="hospital.nome" type="text" /></span></div>
+            <div><span><span>Descricao: </span><input v-model="hospital.descricao" type="text" /></span></div>
+            <div><span><span>Endereco: </span><input v-model="hospital.endereco" type="text" /></span></div>
+            <div><span><span>Imagem URL: </span><input v-model="hospital.imagem" type="text" /></span></div>
+            <div><button v-on:click="changeMakerOnEdit">{{makerOnEdit ? 'MARKER ON' : 'MARKER OFF'}}</ button ></div>
+            <div v-bind:id="'map_'+hospital.id" style="height: 300px; width: 500px"></div>
+            <div><button v-on:click="() => updateHospital(hospital)">Atualizar</ button ></div>
+        </div>
+        <hr/>
+    </div>
+    <div v-if="isLoged()">
+        <h4>Novo hospital</h4>
+        <div><span><span>Nome: </span><input v-model="nome" type="text" /></span></div>
+        <div><span><span>Descricao: </span><input v-model="descricao" type="text" /></span></div>
+        <div><span><span>Endereco: </span><input v-model="endereco" type="text" /></span></div>
+        <div><span><span>Imagem URL: </span><input v-model="imagem" type="text" /></span></div>
+        <div><button v-on:click="changeMakerOnCreate">{{makerOnCreate ? 'MARKER ON' : 'MARKER OFF'}}</ button ></div>
+        <div id="mapidcreate" style="height: 300px; width: 500px"></div>
+        <div><button v-on:click="sendHospital">Enviar</ button ></div>
+    </div>
+    
+    
+</div>
+
+
+ 
+</body>
+<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="app.js">
+
+</script> 
+</html>
